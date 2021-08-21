@@ -1,11 +1,13 @@
+task: korean_spacing_20210101
 log_path: logs
 bert_model: monologg/kobert
-train_data_path: data/train.txt
-val_data_path: data/val.txt
-test_data_path: data/test.txt
+train_data_path: data/1_완료_SCS10_A_한국금융소비자학회_20210220_JKI.txt
+val_data_path: data/1_완료_SCS09_A_한국공연문화학회_2017_20210320_591.txt
+test_data_path: data/1_완료_SCS93_A_연세대학교 법학연구원 글로벌비즈니스와 법센터.txt
 max_len: 128
 train_batch_size: 128
 eval_batch_size: 128
 dropout_rate: 0.1
-gpus: 8
+gpus: null
+cpus: 12
 distributed_backend: ddp
