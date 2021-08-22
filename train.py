@@ -11,7 +11,7 @@ from net import SpacingBertModel
 
 
 def get_dataloader(
-    data_path: str, transform: Callable[[List, List], Tuple], batch_size: int
+    data_path: str, transform: Callable[[List, List], Tuple], batch_size: int, num_workers: int
 ) -> DataLoader:
     """dataloader 생성
 
@@ -24,7 +24,7 @@ def get_dataloader(
         dataloader
     """
     dataset = CorpusDataset(load_data(data_path), transform)
-    dataloader = DataLoader(dataset, batch_size=batch_size)
+    dataloader = DataLoader(dataset, batch_size=batch_size, num_workers=num_workers)
     return dataloader
 
 
@@ -34,13 +34,13 @@ if __name__ == "__main__":
     config = OmegaConf.load("config/train_config.yaml")
     preprocessor = Preprocessor(config.max_len)
     train_dataloader = get_dataloader(
-        config.train_data_path, preprocessor.get_input_features, config.train_batch_size
+        config.train_data_path, preprocessor.get_input_features, config.train_batch_size, num_workers=config.cpus
     )
     val_dataloader = get_dataloader(
-        config.val_data_path, preprocessor.get_input_features, config.train_batch_size
+        config.val_data_path, preprocessor.get_input_features, config.train_batch_size, num_workers=config.cpus
     )
     test_dataloader = get_dataloader(
-        config.test_data_path, preprocessor.get_input_features, config.eval_batch_size
+        config.test_data_path, preprocessor.get_input_features, config.eval_batch_size, num_workers=config.cpus
     )
 
     bert_finetuner = SpacingBertModel(
