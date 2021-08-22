@@ -4,23 +4,23 @@ from torch.utils.data import Dataset
 from utils import load_slot_labels
 
 
+def load_data(data_path: str):
+    """data를 file에서 불러온다.
+
+    Args:
+        data_path: file 경로
+    """
+    with open(data_path, mode="r", encoding="utf-8") as f:
+        lines = f.readlines()
+        sentences = [line.split() for line in lines]
+
+    return sentences
+
 class CorpusDataset(Dataset):
-    def __init__(self, data_path: str, transform: Callable[[List, List], Tuple]):
-        self.sentences = []
+    def __init__(self, sentences, transform: Callable[[List, List], Tuple]):
+        self.sentences = sentences
         self.transform = transform
         self.slot_labels = load_slot_labels()
-
-        self._load_data(data_path)
-
-    def _load_data(self, data_path: str):
-        """data를 file에서 불러온다.
-
-        Args:
-            data_path: file 경로
-        """
-        with open(data_path, mode="r", encoding="utf-8") as f:
-            lines = f.readlines()
-            self.sentences = [line.split() for line in lines]
 
     def _get_tags(self, sentence: List[str]) -> List[str]:
         """문장에 대해 띄어쓰기 tagging을 한다.

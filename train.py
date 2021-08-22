@@ -6,7 +6,7 @@ from omegaconf import OmegaConf
 from torch.utils.data import DataLoader
 
 from preprocessor import Preprocessor
-from dataset import CorpusDataset
+from dataset import CorpusDataset, load_data
 from net import SpacingBertModel
 
 
@@ -23,8 +23,7 @@ def get_dataloader(
     Returns:
         dataloader
     """
-    dataset = CorpusDataset(data_path, transform)
-    print(dataset[0])
+    dataset = CorpusDataset(load_data(data_path), transform)
     dataloader = DataLoader(dataset, batch_size=batch_size)
     return dataloader
 
@@ -35,13 +34,13 @@ if __name__ == "__main__":
     config = OmegaConf.load("config/train_config.yaml")
     preprocessor = Preprocessor(config.max_len)
     train_dataloader = get_dataloader(
-        config.train_data_path, preprocessor.get_input_features, config.train_batch_size, num_workers=config.cpus,
+        config.train_data_path, preprocessor.get_input_features, config.train_batch_size
     )
     val_dataloader = get_dataloader(
-        config.val_data_path, preprocessor.get_input_features, config.train_batch_size, num_workers=config.cpus,
+        config.val_data_path, preprocessor.get_input_features, config.train_batch_size
     )
     test_dataloader = get_dataloader(
-        config.test_data_path, preprocessor.get_input_features, config.eval_batch_size, num_workers=config.cpus,
+        config.test_data_path, preprocessor.get_input_features, config.eval_batch_size
     )
 
     bert_finetuner = SpacingBertModel(
